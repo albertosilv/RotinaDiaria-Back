@@ -27,7 +27,9 @@ app.use(require('./Router/auth'))
 app.use(require('./Router/Task'))
 app.use(cors())
 const port = process.env.PORT || 4000
-
+app.get('/',(req,res)=>{
+    res.send('Bem vindo')
+})
 app.listen(port, () => {
     console.log(`Projeto iniciado na porta ${port}`)
 }) 
