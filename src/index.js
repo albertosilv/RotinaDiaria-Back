@@ -17,19 +17,13 @@ db.on('error', console.error.bind(console, 'Erro na Ligação ao MongoDB'));
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(morgan("dev"))
-app.use(function(req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
-    next();
-});
-app.use(require('./Router/auth'))
-app.use(require('./Router/Task'))
 app.use(cors())
 const port = process.env.PORT || 4000
 app.get('/',(req,res)=>{
     res.send('Bem vindo')
 })
+app.use(require('./Router/auth'))
+app.use(require('./Router/Task'))
 app.listen(port, () => {
     console.log(`Projeto iniciado na porta ${port}`)
 }) 
