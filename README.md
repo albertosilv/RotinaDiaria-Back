@@ -20,7 +20,7 @@ Consiste em uma aplicação de back-end de Rotina Diaria, na qual possui como fu
 5. Definição de  prioridades as tarefas, sendo apenas Alta ou Baixa.
 6. Ordenação de tarefas por prioridade mais alta.
 7. Cadastro no sistema.
-8. Llogin no sistema (usando JWT).
+8. Login no sistema (usando JWT).
 9. Logout no sistema.
 
 
