@@ -1,6 +1,6 @@
 # RotinaDiaria-Back
 
-#### Bibliotecas e Framewords utilizados
+#### Bibliotecas e Frameworks utilizados
 
 Mongoose, Express, Body-Parser, Bcryptjs e Json Web Token
 
