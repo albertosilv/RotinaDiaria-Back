@@ -4,10 +4,10 @@ const Task = require('../models/task')
 
 module.exports = {
     async create(req, res) {
-        const { prioridade } = req.body
+        const {tarefa, prioridade, createdAt } = req.body
         try {
             if (prioridade.toLowerCase() == 'alta' || prioridade.toLowerCase()  == 'baixa') {
-                const task = await Task.create(req.body)
+                const task = await Task.create({tarefa, prioridade, createdAt })
                 return res.status(201).json({ task });
             }
             else{
@@ -31,7 +31,6 @@ module.exports = {
     async alltasks(req, res) {
         try {
             const tasks = await Task.find({});
-            console.log(tasks)
             const highPriority = tasks.filter(e => {
                 return e.prioridade.toLowerCase() == 'alta'
             })
