@@ -4,10 +4,10 @@ const Task = require('../models/task')
 
 module.exports = {
     async create(req, res) {
-        const {tarefa, prioridade, createdAt } = req.body
+        const {nome, descricao, prioridade, createdAt } = req.body
         try {
             if (prioridade.toLowerCase() == 'alta' || prioridade.toLowerCase()  == 'baixa') {
-                const task = await Task.create({tarefa, prioridade, createdAt })
+                const task = await Task.create({nome, descricao, prioridade, createdAt })
                 return res.status(201).json({ task });
             }
             else{
@@ -46,9 +46,15 @@ module.exports = {
 
     async update(req, res) {
         const { id } = req.params;
+        const {prioridade} = req.body;
         try {
-            const task = await Task.findByIdAndUpdate(id, { $set: req.body });
-            return res.status(200).json(task);
+            if (prioridade.toLowerCase() == 'alta' || prioridade.toLowerCase()  == 'baixa'){
+                const task = await Task.findByIdAndUpdate(id, { $set: req.body },{new: true});
+                return res.status(200).json(task);
+            }
+            else{
+                return res.status(400).send({ error: 'Registration failed, priority not found' })
+            }
         } catch (error) {
             return res.status(400).json({ error });
         }

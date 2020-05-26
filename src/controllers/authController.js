@@ -3,10 +3,11 @@ const bscrypt = require('bcryptjs')
 const User = require('../models/auth');
 const authConfig = require('../config/auth.json')
 const jwt = require('jsonwebtoken')
+const Token = require('../models/token')
 
 function generateToken(params = {}) {
     return token = jwt.sign(params, authConfig.secret, {
-        expiresIn: 3600,
+        expiresIn: 86400,
 
     })
 }
@@ -19,7 +20,7 @@ module.exports = {
             const user = await User.create(req.body)
             user.password = undefined
             return res.send({
-                user:true,
+                user: true,
                 token: generateToken({ id: user.id })
             });
         } catch (error) {
@@ -38,19 +39,34 @@ module.exports = {
             }
             user.password = undefined
             res.send({
-                user:true,
+                user: true,
                 token: generateToken({ id: user.id })
             })
-        }catch(err){
+        } catch (err) {
             return res.status(400).send({ error: 'Login failed' });
         }
     },
 
-    logout(req, res) {
+    async logout(req, res) {
         try {
-            res.status(200).send({ user: false, token: undefined });
-        } catch (error) {
-            res.status(400).send({ error: 'Logout failed' })
+            const authHeader = req.headers.authorization;
+            if (!authHeader) {
+                return res.status(401).send({ error: ' No token provided' })
+            }
+            const parts = authHeader.split(' ')
+            if (!parts === 2) {
+                return res.status(401).send({ error: 'Token error' })
+            }
+            const [scheme, token] = parts
+            if (!/^Bearer$/i.test(scheme)) {
+                return res.status(401).send({ error: 'Token malformated' })
+            }
+            const registro = await Token.create({ token })
+            return res.status(201).json({ registro })
+        
+        }
+        catch (error) {
+            return res.status(400).send({ error: 'Logout failed' });
         }
     }
 }

@@ -9,6 +9,5 @@ router.post('/create',taskController.create)
 router.get('/tarefas/:id',taskController.onetasks)
 router.get('/tarefas',taskController.alltasks)
 router.delete('/delete/:id',taskController.delete)
-
-
+router.put('/editar/:id',taskController.update)
 module.exports = router;
