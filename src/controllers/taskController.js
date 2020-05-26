@@ -64,7 +64,7 @@ module.exports = {
         const { id } = req.params;
         try {
             await Task.findByIdAndRemove(id);
-            return res.send('Deleted Sucess');
+            return res.status(204).json();
         } catch (error) {
             return res.status(400).json({ error });
         }
