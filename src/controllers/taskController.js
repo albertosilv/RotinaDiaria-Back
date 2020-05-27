@@ -4,13 +4,13 @@ const Task = require('../models/task')
 
 module.exports = {
     async create(req, res) {
-        const {nome, descricao, prioridade, createdAt } = req.body
+        const { nome, descricao, prioridade, createdAt } = req.body
         try {
-            if (prioridade.toLowerCase() == 'alta' || prioridade.toLowerCase()  == 'baixa') {
-                const task = await Task.create({nome, descricao, prioridade, createdAt })
+            if (prioridade.toLowerCase() == 'alta' || prioridade.toLowerCase() == 'baixa') {
+                const task = await Task.create({ nome, descricao, prioridade, createdAt })
                 return res.status(201).json({ task });
             }
-            else{
+            else {
                 return res.status(400).send({ error: 'Registration failed, priority not found' })
             }
         } catch (erro) {
@@ -24,7 +24,7 @@ module.exports = {
             const task = await Task.findById(id);
             return res.status(200).send(task);
         } catch (error) {
-            return res.status(404).json(error);
+            return res.status(404).json({ error });
         }
     },
 
@@ -34,8 +34,8 @@ module.exports = {
             const highPriority = tasks.filter(e => {
                 return e.prioridade.toLowerCase() == 'alta'
             })
-            const lowPriority = tasks.filter( e =>{
-                return e.prioridade.toLowerCase()== 'baixa'
+            const lowPriority = tasks.filter(e => {
+                return e.prioridade.toLowerCase() == 'baixa'
             })
             const tasksSorted = highPriority.concat(lowPriority)
             return res.status(200).json(tasksSorted);
@@ -46,13 +46,13 @@ module.exports = {
 
     async update(req, res) {
         const { id } = req.params;
-        const {prioridade} = req.body;
+        const { prioridade } = req.body;
         try {
-            if (prioridade.toLowerCase() == 'alta' || prioridade.toLowerCase()  == 'baixa'){
-                const task = await Task.findByIdAndUpdate(id, { $set: req.body },{new: true});
+            if (prioridade.toLowerCase() == 'alta' || prioridade.toLowerCase() == 'baixa') {
+                const task = await Task.findByIdAndUpdate(id, { $set: req.body }, { new: true });
                 return res.status(200).json(task);
             }
-            else{
+            else {
                 return res.status(400).send({ error: 'Registration failed, priority not found' })
             }
         } catch (error) {
