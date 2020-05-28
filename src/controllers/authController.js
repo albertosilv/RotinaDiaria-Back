@@ -4,6 +4,7 @@ const User = require('../models/auth');
 const authConfig = require('../config/auth.json')
 const jwt = require('jsonwebtoken')
 const Token = require('../models/token')
+const authentication = require('../middleware/authentication')
 
 function generateToken(params = {}) {
     return token = jwt.sign(params, authConfig.secret, {
@@ -49,23 +50,16 @@ module.exports = {
 
     async logout(req, res) {
         try {
-            const authHeader = req.headers.authorization;
-            if (!authHeader) {
-                return res.status(401).send({ error: ' No token provided' })
-            }
-            const parts = authHeader.split(' ')
-            if (!parts === 2) {
-                return res.status(401).send({ error: 'Token error' })
-            }
-            const [scheme, token] = parts
-            if (!/^Bearer$/i.test(scheme)) {
-                return res.status(401).send({ error: 'Token malformated' })
+            const token = await authentication(req.headers.authorization);
+            if (typeof token == 'object') {
+                return res.status(401).send(token)
             }
             const registro = await Token.create({ token })
             return res.status(201).json({ registro })
-        
+
         }
         catch (error) {
+            console.log(error)
             return res.status(400).send({ error: 'Logout failed' });
         }
     }

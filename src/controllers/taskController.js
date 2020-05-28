@@ -30,15 +30,8 @@ module.exports = {
 
     async alltasks(req, res) {
         try {
-            const tasks = await Task.find({});
-            const highPriority = tasks.filter(e => {
-                return e.prioridade.toLowerCase() == 'alta'
-            })
-            const lowPriority = tasks.filter(e => {
-                return e.prioridade.toLowerCase() == 'baixa'
-            })
-            const tasksSorted = highPriority.concat(lowPriority)
-            return res.status(200).json(tasksSorted);
+            const tasks = await Task.find({}).sort({prioridade:1})
+            return res.status(200).json(tasks);
         } catch (error) {
             return res.status(400).json({ error });
         }
