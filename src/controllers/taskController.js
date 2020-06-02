@@ -1,13 +1,19 @@
 const express = require('express')
-
+const Auth = require('../models/auth')
 const Task = require('../models/task')
 
 module.exports = {
     async create(req, res) {
         const { nome, descricao, prioridade, createdAt } = req.body
+        const {idUser} =  req.params
         try {
             if (prioridade.toLowerCase() == 'alta' || prioridade.toLowerCase() == 'baixa') {
                 const task = await Task.create({ nome, descricao, prioridade, createdAt })
+                await Auth.findByIdAndUpdate(idUser, {
+                    $push: {
+                      Task: task._id,
+                    },
+                  });
                 return res.status(201).json({ task });
             }
             else {
@@ -30,7 +36,14 @@ module.exports = {
 
     async alltasks(req, res) {
         try {
-            const tasks = await Task.find({}).sort({prioridade:1})
+            const tasksUser = await Auth.findById(req.params.idUser).populate('Task')
+            const highPriority = tasksUser.Task.filter(e => {;
+                return e.prioridade.toLowerCase() == 'alta'	
+            })	
+            const lowPriority = tasksUser.Task.filter(e => {	
+                return e.prioridade.toLowerCase() == 'baixa'	
+            })
+            const tasks = highPriority.concat(lowPriority)
             return res.status(200).json(tasks);
         } catch (error) {
             return res.status(400).json({ error });

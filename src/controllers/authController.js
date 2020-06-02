@@ -21,7 +21,7 @@ module.exports = {
             const user = await User.create(req.body)
             user.password = undefined
             return res.send({
-                user: true,
+                user: user,
                 token: generateToken({ id: user.id })
             });
         } catch (error) {
@@ -40,7 +40,7 @@ module.exports = {
             }
             user.password = undefined
             res.send({
-                user: true,
+                user: user,
                 token: generateToken({ id: user.id })
             })
         } catch (err) {

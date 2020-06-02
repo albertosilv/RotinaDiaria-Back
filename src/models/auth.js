@@ -21,6 +21,11 @@ const userSchema = new mongoose.Schema({
         default:Date.now,
 
     },
+    Task: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Task',
+        default: [],
+      }]
 })
 userSchema.pre('save', async function(next){
     const hash = await bcrypt.hash(this.password,10)
