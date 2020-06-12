@@ -17,10 +17,10 @@ module.exports = {
         const { email } = req.body
         try {
             if (await User.findOne({ email }))
-                return res.send({ error:'Usuário já existe' })
+                return res.status(401).json({ error:'Usuário já existe' })
             const user = await User.create(req.body)
             user.password = undefined
-            return res.send({
+            return res.status(201).json({
                 user: user,
                 token: generateToken({ id: user.id })
             });
@@ -33,13 +33,13 @@ module.exports = {
             const { email, password } = req.body
             const user = await User.findOne({ email }).select('+password')
             if (!user) {
-                res.status(400).send({ error: 'Usuario não existe' })
+                res.status(401).json({ error: 'Usuario não existe' })
             }
             if (!await bscrypt.compare(password, user.password)) {
-                return res.status(400).send({ error: 'Senha invalida' })
+                return res.status(401).json({ error: 'Senha invalida' })
             }
             user.password = undefined
-            res.send({
+            res.status(200).json({
                 user: user,
                 token: generateToken({ id: user.id })
             })
@@ -52,10 +52,10 @@ module.exports = {
         try {
             const token = await authentication(req.headers.authorization);
             if (typeof token == 'object') {
-                return res.send(token)
+                return res.json(token)
             }
             const registro = await Token.create({ token })
-            return res.status(201).json({ registro })
+            return res.status(200).json({ registro })
 
         }
         catch (error) {

@@ -17,7 +17,7 @@ module.exports = {
                 return res.status(201).json({ task });
             }
             else {
-                return res.status(400).send({ error: 'Registration failed, priority not found' })
+                return res.status(401).send({ error: 'Registration failed, priority not found' })
             }
         } catch (erro) {
             return res.status(400).send({ error: 'Registration failed' });
@@ -28,7 +28,7 @@ module.exports = {
         const { id } = req.params;
         try {
             const task = await Task.findById(id);
-            return res.status(200).send(task);
+            return res.status(200).json(task);
         } catch (error) {
             return res.status(404).json({ error });
         }
@@ -59,7 +59,7 @@ module.exports = {
                 return res.status(200).json(task);
             }
             else {
-                return res.status(400).send({ error: 'Registration failed, priority not found' })
+                return res.status(404).json({ error: 'Registration failed, priority not found' })
             }
         } catch (error) {
             return res.status(400).json({ error });
